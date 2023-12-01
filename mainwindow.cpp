@@ -1,12 +1,15 @@
 #include "mainwindow.h"
 
 
+
 mainwindow::mainwindow(snake *gamesnake, apple *gameapple)
 {
+
     scene = new QGraphicsScene;
+
     view = new QGraphicsView;
     dock = new QDockWidget();
-
+    this->setFixedSize(800,800);
     view->setScene(scene);
     scene->setSceneRect(0,0,600,600);
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -27,11 +30,13 @@ mainwindow::mainwindow(snake *gamesnake, apple *gameapple)
 
     bkgrnd = bkgrnd.scaledToHeight(600);
     bkgrnd = bkgrnd.scaledToWidth(600);
+    view->setFrameShadow(QFrame::Raised);
+
     view->setRenderHint(QPainter::Antialiasing);
     view->setBackgroundBrush(bkgrnd);
 
     view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-    view->setDragMode(QGraphicsView::ScrollHandDrag);
+    //view->setDragMode(QGraphicsView::ScrollHandDrag);
 
     view->setWindowTitle(QT_TRANSLATE_NOOP(QGraphicsView,"Snake Game"));
 

@@ -5,7 +5,7 @@
 #include <QStyleOption>
 #include <QtMath>
 #include <QKeyEvent>
-//#include <iostream>
+#include <iostream>
 #include <QWidget>
 #include <QRandomGenerator>
 
@@ -15,8 +15,8 @@ snake::snake() : color(150,20,20)
     this->right();
     this->mydirection = Right;
     for (int i = 0; i < (this->bodyx).size();i++) {
-        (this->bodyx)[i] = -20*i-20;
-        (this->bodyy)[i] = 0;
+        (this->bodyx)[i] = this->xpos-20*i-20;
+        (this->bodyy)[i] = this->ypos;
     }
 
 }
@@ -28,7 +28,7 @@ void snake::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *
     //int x = 0;
     //int y = 0;
     painter->setBrush(Qt::blue);
-    for(size_t i = 0; i< (this->bodyx).size()-1;i++){
+    for(size_t i = 0; i< (this->bodyx).size();i++){
         QPointF coord =  mapFromScene(this->bodyx[i],this->bodyy[i]);
         // could also subtract snake position and body calculated coords to get local coords?
         painter->drawRect(coord.x(),coord.y(),20,20);
@@ -102,14 +102,19 @@ void snake::advance(int phase){
         checkTangled();
         this->updateBody();
         this->updateScore();
+        //(this->bodyx)[0] = this->xpos;
+        //(this->bodyy)[0] = this->ypos;
+
+        //need snake length here, can't use body size since its 20, not snake length
+        for(size_t i = (this->bodyx).size()-1; i >= 1; i--){
+            (this->bodyx)[i] = this->bodyx[i-1];
+            (this->bodyy)[i] = this->bodyy[i-1];
+
+
+        }
         (this->bodyx)[0] = this->xpos;
         (this->bodyy)[0] = this->ypos;
 
-        //need snake length here, can't use body size since its 20, not snake length
-        for(size_t i = (this->bodyx).size()-2; i >= 1; i--){
-            (this->bodyx)[i] = this->bodyx[i-1];
-            (this->bodyy)[i] = this->bodyy[i-1];
-        }
 
         switch(mydirection){
             case(Up):{
@@ -129,7 +134,9 @@ void snake::advance(int phase){
                 break;
             }
         }
-
+            std::cout << "head" << " : "<< this->xpos << std::endl;
+            std::cout << 1 << " : "<< (this->bodyx)[1] << std::endl;
+            std::cout << 0 << " : "<< (this->bodyx)[0] << std::endl;
     //this->setPos(mapToParent(x,y));
         this->setPos(this->xpos,this->ypos);
 
